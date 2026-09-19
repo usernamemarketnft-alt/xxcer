@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>بره السالفة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Amiri:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F2E4C4;
+    --panel:#FFFBF0;
+    --panel-2:#FFF6DF;
+    --ink:#2B1B12;
+    --ink-soft:#6B5238;
+    --accent:#B5322A;
+    --accent-ink:#FFF6EC;
+    --gold:#A6791E;
+    --gold-2:#C99A2E;
+    --teal:#0E5257;
+    --teal-2:#127680;
+    --border:rgba(43,27,18,.16);
+    --shadow:rgba(43,27,18,.22);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#12262A; --panel:#1C363C; --panel-2:#173035;
+      --ink:#F3E6C8; --ink-soft:#C9B896;
+      --accent:#E2685D; --accent-ink:#241211;
+      --gold:#D8A93B; --gold-2:#E9C264;
+      --teal:#4FBDC4; --teal-2:#3AA6AD;
+      --border:rgba(243,230,200,.18); --shadow:rgba(0,0,0,.45);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#12262A; --panel:#1C363C; --panel-2:#173035;
+    --ink:#F3E6C8; --ink-soft:#C9B896;
+    --accent:#E2685D; --accent-ink:#241211;
+    --gold:#D8A93B; --gold-2:#E9C264;
+    --teal:#4FBDC4; --teal-2:#3AA6AD;
+    --border:rgba(243,230,200,.18); --shadow:rgba(0,0,0,.45);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Tajawal',system-ui,-apple-system,sans-serif;
+    background:
+      radial-gradient(circle at 15% 8%, color-mix(in srgb, var(--gold) 14%, transparent), transparent 45%),
+      radial-gradient(circle at 90% 90%, color-mix(in srgb, var(--teal) 14%, transparent), transparent 50%),
+      var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+    padding:22px 14px 40px;
+  }
+  .wrap{max-width:520px;margin:0 auto;}
+
+  header{text-align:center;margin-bottom:18px;}
+  .kicker{font-size:13px; color:var(--teal); font-weight:700;}
+  h1{
+    font-family:'Amiri', serif; font-size:42px; margin:2px 0 4px;
+    color:var(--accent); text-shadow:2px 2px 0 var(--gold-2);
+  }
+  .sub{color:var(--ink-soft); font-size:14px; max-width:400px; margin:0 auto;}
+  .zigzag{
+    height:10px; margin-top:14px;
+    background-image: linear-gradient(135deg, var(--gold-2) 25%, transparent 25%), linear-gradient(225deg, var(--gold-2) 25%, transparent 25%);
+    background-size: 16px 10px; background-position: center; opacity:.55;
+  }
+
+  .panel{
+    background:var(--panel); border:1px solid var(--border); border-radius:22px;
+    padding:20px 18px; box-shadow:0 10px 28px -16px var(--shadow); margin-bottom:16px;
+  }
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .field{margin-bottom:18px;}
+  .field-label{font-weight:800; font-size:14.5px; margin-bottom:8px; display:block;}
+  .stepper{display:flex; align-items:center; justify-content:center; gap:18px;}
+  .stepper button{
+    width:44px;height:44px;border-radius:50%; border:none; cursor:pointer;
+    background:var(--teal); color:var(--accent-ink); font-size:22px; font-weight:800;
+  }
+  .stepper button:active{transform:scale(.95);}
+  .stepper .count{font-family:'Amiri',serif; font-size:34px; min-width:52px; text-align:center; color:var(--accent);}
+
+  .cats{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+  .cat-chip{
+    display:flex; align-items:center; gap:8px;
+    background:var(--panel-2); border:1px solid var(--border); border-radius:12px;
+    padding:9px 10px; cursor:pointer; font-size:13.5px; font-weight:700;
+    user-select:none;
+  }
+  .cat-chip.off{opacity:.45;}
+  .cat-chip .box{
+    width:17px;height:17px;border-radius:5px; border:2px solid var(--teal); flex:none;
+    display:flex;align-items:center;justify-content:center; font-size:12px; color:var(--accent-ink);
+  }
+  .cat-chip.on .box{background:var(--teal);}
+
+  button.primary{
+    display:block; width:100%; font-family:inherit; font-weight:800; font-size:16px;
+    background:var(--accent); color:var(--accent-ink); border:none; border-radius:14px;
+    padding:14px 10px; cursor:pointer; box-shadow:0 8px 18px -10px var(--shadow);
+  }
+  button.primary:active{transform:translateY(1px);}
+  button.primary:disabled{opacity:.5; cursor:default;}
+  button.ghost{
+    display:block; width:100%; font-family:inherit; font-weight:700; font-size:14px;
+    background:transparent; color:var(--ink-soft); border:1px solid var(--border);
+    border-radius:14px; padding:11px 10px; cursor:pointer; margin-top:10px;
+  }
+  .err{color:var(--accent); font-size:13px; text-align:center; margin-top:6px; min-height:16px;}
+
+  .pass-msg{text-align:center; margin-bottom:14px;}
+  .pass-msg .to-whom{font-family:'Amiri',serif; font-size:30px; color:var(--accent);}
+  .pass-msg .hint{font-size:13px; color:var(--ink-soft); margin-top:4px;}
+
+  .card-flip{
+    position:relative; border-radius:20px; overflow:hidden; cursor:pointer;
+    min-height:190px; display:flex; align-items:center; justify-content:center; text-align:center;
+    background:var(--panel-2); border:1px solid var(--border);
+  }
+  .card-flip .face{padding:20px;}
+  .face-hidden{font-size:15px; color:var(--ink-soft); font-weight:700;}
+  .face-hidden .eye{font-size:40px; display:block; margin-bottom:8px;}
+  .face-revealed{display:none;}
+  .card-flip.shown .face-hidden{display:none;}
+  .card-flip.shown .face-revealed{display:block;}
+  .role-tag{font-size:13px; font-weight:800; color:var(--teal); margin-bottom:6px;}
+  .role-tag.outside{color:var(--accent);}
+  .word-big{font-family:'Amiri',serif; font-size:34px; color:var(--ink); margin:4px 0;}
+  .role-note{font-size:12.5px; color:var(--ink-soft); margin-top:6px;}
+
+  .progress-dots{display:flex; justify-content:center; gap:6px; margin:14px 0;}
+  .progress-dots span{width:8px;height:8px;border-radius:50%; background:var(--border);}
+  .progress-dots span.done{background:var(--teal);}
+  .progress-dots span.current{background:var(--accent);}
+
+  .center-icon{font-size:46px; text-align:center; margin-bottom:8px;}
+  .discuss-text{text-align:center; font-size:14.5px; color:var(--ink-soft); line-height:1.9; margin-bottom:16px;}
+  .word-reveal{
+    text-align:center; background:var(--panel-2); border:1px dashed var(--gold-2);
+    border-radius:16px; padding:16px; margin-bottom:14px;
+  }
+  .word-reveal .lbl{font-size:12.5px; color:var(--ink-soft); font-weight:700;}
+  .word-reveal .val{font-family:'Amiri',serif; font-size:32px; color:var(--accent); margin-top:2px;}
+  .word-reveal .outsider{font-size:14px; color:var(--teal); font-weight:800; margin-top:8px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker">لعبة جماعية عراقية</div>
+    <h1>بره السالفة</h1>
+    <p class="sub">الكل يعرف الكلمة إلا وحد بره السالفة... احچوا عنها بذكاء وحاولوا تكشفون منو الغريب بينكم</p>
+    <div class="zigzag"></div>
+  </header>
+
+  <div class="view active" id="view-setup">
+    <div class="panel">
+      <div class="field">
+        <span class="field-label">عدد اللاعبين</span>
+        <div class="stepper">
+          <button type="button" id="plusBtn">+</button>
+          <span class="count" id="playerCount">٤</span>
+          <button type="button" id="minusBtn">−</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">الفئات المشاركة</span>
+        <div class="cats" id="catChips"></div>
+      </div>
+
+      <button class="primary" id="beginBtn">وزّع السالفة</button>
+      <div class="err" id="setupErr"></div>
+    </div>
+  </div>
+
+  <div class="view" id="view-reveal">
+    <div class="panel">
+      <div class="pass-msg">
+        <div class="hint">مرر الجهاز إلى</div>
+        <div class="to-whom" id="passTo">اللاعب ١</div>
+      </div>
+
+      <div class="card-flip" id="cardFlip">
+        <div class="face face-hidden">
+          <span class="eye">🤫</span>
+          اضغط بس إذا الجهاز وياك وحدك
+        </div>
+        <div class="face face-revealed" id="faceRevealed"></div>
+      </div>
+
+      <div class="progress-dots" id="progressDots"></div>
+
+      <button class="primary" id="nextBtn" disabled>شفت دوري، مرر للي بعدي</button>
+    </div>
+  </div>
+
+  <div class="view" id="view-discuss">
+    <div class="panel">
+      <div class="center-icon">🗣️</div>
+      <p class="discuss-text">
+        الحين كل واحد يحچي جملة وحدة بس عن الكلمة، من غير ما يفصح عنها مباشرة.<br>
+        اللي بره السالفة لازم يتذاكى ويحچي شي عام حتى ما ينكشف.<br>
+        بعد ما تدورون دورين أو دورتين، صوّتوا سوا منو اللي بره السالفة!
+      </p>
+      <button class="primary" id="revealBtn">كشف الحل</button>
+      <button class="ghost" id="newRoundFromDiscuss">جولة جديدة</button>
+    </div>
+  </div>
+
+  <div class="view" id="view-result">
+    <div class="panel">
+      <div class="center-icon">🎉</div>
+      <div class="word-reveal">
+        <div class="lbl">الكلمة كانت</div>
+        <div class="val" id="resultWord">—</div>
+        <div class="outsider" id="resultOutsider">—</div>
+      </div>
+      <button class="primary" id="newRoundBtn">جولة جديدة</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+
+  const categories = {
+    "أثاث": ["كنبة","طاولة","كرسي","خزانة","سرير","مرآة","رف كتب","سجادة","ستارة","دولاب","كومدينو","مكتب","ثريا","أريكة هزازة","طقم صالون"],
+    "جبوسة عراقية": ["العقال","الغترة","الجراوية","الشماغ","الكوفية","الطاقية","الحطة","البرنيطة","الشيلة","العمامة","الطربوش","البيريه"],
+    "موطات عراقية": ["الكرادة","الأعظمية","الكاظمية","المنصور","زيونة","البياع","الدورة","الشعلة","السيدية","شارع الرشيد","باب الشيخ","الفضل","البتاويين","جميلة"],
+    "حيوانات": ["أسد","نمر","جمل","حصان","غزال","ذئب","ثعلب","أرنب","قرد","فيل","زرافة","دب","نسر","بومة","سلحفاة","دولفين","حوت","تمساح","ثعبان","خروف"],
+    "ملابس": ["دشداشة","عباية","شماغ","قميص","بنطال","فستان","جاكيت","بدلة","تنورة","طرحة","جوارب","حذاء","حزام","قفازات"],
+    "ألعاب": ["كرة القدم","الشطرنج","الدومينو","طرنيب","بلوت","الاستغماية","الحجلة","سبع طاس","تنس الطاولة","كرة السلة","البلياردو","طاولة الزهر","لعبة الكراسي"],
+    "لاعبين كرة قدم": ["كريستيانو رونالدو","ليونيل ميسي","نيمار","كيليان مبابي","إيرلينغ هالاند","بيليه","دييغو مارادونا","زين الدين زيدان","رونالدينيو","رونالدو نازاريو","محمد صلاح","لوكا مودريتش","كيفن دي بروين","سيرجيو راموس","لويس سواريز","أندريس إنييستا","دافيد بيكهام","كاكا","فرانشيسكو توتي","أحمد راضي","حسين سعيد","يونس محمود","علي عدنان","عماد محمد","لعيبي شكر","رضا عبد العالي"],
+    "أشياء غريبة": ["ستيانة","مبردة","جهاز تنظيف","سوني","كاشية","مكواة","غسالة","ثلاجة","مروحة","دفاية نفط","طنجرة ضغط","ريموت كنترول","شاحن موبايل","سماعات","بطارية","مفتاح انجليزي","مسبحة","ولاعة","كبريت","مسدس مي"],
+    "رياضات": ["كرة القدم","كرة السلة","الكرة الطائرة","السباحة","الجري","الملاكمة","المصارعة","رفع الأثقال","الجمباز","التنس","الغولف","ركوب الخيل","سباق الدراجات","التايكواندو","الكاراتيه","الرماية","التزلج","الغطس"],
+    "ماكولات": ["دولمة","كبة","تشريب","مسكوف","قوزي","برياني","كباب","تكة","فلافل","شاورما","پاچة","كليجة","زلابية","بغلاوة","تمن عدس","مرقة باميه","مرقة فاصوليا","خبز صمون","شوربة عدس","دجاج مشوي"],
+    "مهن": ["مهندس","طبيب","معلم","محامي","شرطي","إطفائي","سائق تكسي","نجار","حداد","كهربائي","سباك","خياط","حلاق","طباخ","ممرض","صيدلي","مزارع","صياد","بناء","محاسب","صحفي","عامل نظافة"],
+    "معلومات عامة": ["الشمس","القمر","البركان","الزلزال","الكهرباء","الإنترنت","الديمقراطية","الاقتصاد","الفضاء","برج إيفل","الأهرامات","البحر الميت","نهر دجلة","نهر الفرات"],
+    "مشاهير العالم": ["ميسي","رونالدو","مايكل جاكسون","أينشتاين","شكسبير","نيلسون مانديلا","محمد علي كلاي","ستيف جوبز","ليوناردو دافنشي","تشارلي شابلن","مارلين مونرو","إلفيس بريسلي","بيليه","براد بيت","أنجلينا جولي","توم هانكس","نيمار","كوبي براينت","مايكل جوردان","بيونسيه","ريهانا","أديل","شاكيرا","أوبرا وينفري","بيل غيتس","مارك زوكربيرغ","والت ديزني","فريدي ميركوري","بابلو بيكاسو","تشي غيفارا","ليدي غاغا","تايلور سويفت","ستيفن هوكينغ"],
+    "مشاهير عراقيين": ["كاظم الساهر","ناظم الغزالي","سعدون جابر","ياس خضر","حسين نعمة","إلهام المدفعي","رياض أحمد","مائدة نزهت","أحمد راضي","حسين سعيد","يونس محمود","الجواهري","مظفر النواب","فؤاد سالم","عفيفة إسكندر","بدر شاكر السياب","نازك الملائكة","سعدي يوسف","معروف الرصافي","جميل صدقي الزهاوي","علي عدنان","عماد محمد","سيتا هاكوبيان","وحيدة خليل","خليل شوقي","سامي عبد الحميد","حميد منصور","أنور شاؤول"]
+  };
+
+  const arNums = ["٠","١","٢","٣","٤","٥","٦","٧","٨","٩"];
+  const toAr = n => String(n).split("").map(c => /[0-9]/.test(c) ? arNums[+c] : c).join("");
+
+  let playerCount = 4;
+  const MIN_P = 3, MAX_P = 12;
+  let activeCats = new Set(Object.keys(categories));
+  let outsiderIndex = 0;
+  let secretWord = "";
+  let secretCat = "";
+  let currentReveal = 0;
+
+  const views = {
+    setup: document.getElementById('view-setup'),
+    reveal: document.getElementById('view-reveal'),
+    discuss: document.getElementById('view-discuss'),
+    result: document.getElementById('view-result'),
+  };
+  function showView(name){
+    Object.values(views).forEach(v => v.classList.remove('active'));
+    views[name].classList.add('active');
+  }
+
+  const playerCountEl = document.getElementById('playerCount');
+  const plusBtn = document.getElementById('plusBtn');
+  const minusBtn = document.getElementById('minusBtn');
+  const catChips = document.getElementById('catChips');
+  const beginBtn = document.getElementById('beginBtn');
+  const setupErr = document.getElementById('setupErr');
+
+  const passTo = document.getElementById('passTo');
+  const cardFlip = document.getElementById('cardFlip');
+  const faceRevealed = document.getElementById('faceRevealed');
+  const progressDots = document.getElementById('progressDots');
+  const nextBtn = document.getElementById('nextBtn');
+
+  const revealBtn = document.getElementById('revealBtn');
+  const newRoundFromDiscuss = document.getElementById('newRoundFromDiscuss');
+  const resultWord = document.getElementById('resultWord');
+  const resultOutsider = document.getElementById('resultOutsider');
+  const newRoundBtn = document.getElementById('newRoundBtn');
+
+  function renderCount(){ playerCountEl.textContent = toAr(playerCount); }
+  plusBtn.addEventListener('click', () => { if (playerCount < MAX_P){ playerCount++; renderCount(); }});
+  minusBtn.addEventListener('click', () => { if (playerCount > MIN_P){ playerCount--; renderCount(); }});
+  renderCount();
+
+  function renderCats(){
+    catChips.innerHTML = '';
+    Object.keys(categories).forEach(cat => {
+      const chip = document.createElement('div');
+      const on = activeCats.has(cat);
+      chip.className = 'cat-chip ' + (on ? 'on' : 'off');
+      chip.innerHTML = `<span class="box">${on ? '✓' : ''}</span><span>${cat}</span>`;
+      chip.addEventListener('click', () => {
+        if (activeCats.has(cat)) activeCats.delete(cat); else activeCats.add(cat);
+        renderCats();
+      });
+      catChips.appendChild(chip);
+    });
+  }
+  renderCats();
+
+  beginBtn.addEventListener('click', () => {
+    if (activeCats.size === 0){
+      setupErr.textContent = 'لازم تختار فئة وحدة على الأقل';
+      return;
+    }
+    setupErr.textContent = '';
+
+    const pool = [];
+    activeCats.forEach(cat => categories[cat].forEach(w => pool.push({word:w, cat})));
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+    secretWord = pick.word;
+    secretCat = pick.cat;
+    outsiderIndex = Math.floor(Math.random() * playerCount);
+    currentReveal = 0;
+
+    renderProgress();
+    setupRevealCard();
+    showView('reveal');
+  });
+
+  function renderProgress(){
+    progressDots.innerHTML = '';
+    for (let i = 0; i < playerCount; i++){
+      const dot = document.createElement('span');
+      if (i < currentReveal) dot.className = 'done';
+      else if (i === currentReveal) dot.className = 'current';
+      progressDots.appendChild(dot);
+    }
+  }
+
+  function setupRevealCard(){
+    passTo.textContent = 'اللاعب ' + toAr(currentReveal + 1);
+    cardFlip.classList.remove('shown');
+    nextBtn.disabled = true;
+
+    const isOutsider = currentReveal === outsiderIndex;
+    if (isOutsider){
+      faceRevealed.innerHTML = `
+        <div class="role-tag outside">انت بره السالفة!</div>
+        <div class="word-big">🕵️</div>
+        <div class="role-note">لا تعرف الكلمة... تذاكى واسمع الكل زين قبل لا تحچي</div>`;
+    } else {
+      faceRevealed.innerHTML = `
+        <div class="role-tag">الفئة: ${secretCat}</div>
+        <div class="word-big">${secretWord}</div>
+        <div class="role-note">احچي عنها بتلميح خفيف، لا تفضحها!</div>`;
+    }
+  }
+
+  cardFlip.addEventListener('click', () => {
+    if (cardFlip.classList.contains('shown')) return;
+    cardFlip.classList.add('shown');
+    nextBtn.disabled = false;
+  });
+
+  nextBtn.addEventListener('click', () => {
+    currentReveal++;
+    if (currentReveal >= playerCount){
+      showView('discuss');
+    } else {
+      renderProgress();
+      setupRevealCard();
+    }
+  });
+
+  revealBtn.addEventListener('click', () => {
+    resultWord.textContent = secretWord + ' (' + secretCat + ')';
+    resultOutsider.textContent = 'اللي كان بره السالفة: اللاعب ' + toAr(outsiderIndex + 1);
+    showView('result');
+  });
+
+  function resetToSetup(){ showView('setup'); }
+  newRoundFromDiscuss.addEventListener('click', resetToSetup);
+  newRoundBtn.addEventListener('click', resetToSetup);
+
+})();
+</script>
+</body>
+</html>
